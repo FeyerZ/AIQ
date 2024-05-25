@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Major and Chapter</title>
+    <style>
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        label {
+            font-size: 18px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#id_major').change(function() {
+                var url = "{% url 'load_chapters' %}";
+                var major = $(this).val();
+                $.ajax({
+                    url: url,
+                    data: {
+                        'major': major
+                    },
+                    success: function(data) {
+                        $('#id_chapter').empty();
+                        $('#id_chapter').append('<option value="" disabled selected>Select a chapter</option>');
+                        $.each(data, function(key, value) {
+                            $('#id_chapter').append('<option value="' + value[0] + '">' + value[1] + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

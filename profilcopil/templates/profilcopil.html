@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}
+Home
+{% endblock %}
+{% block head %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#id_major').change(function() {
+                var url = "{% url 'load_chapters' %}";
+                var major = $(this).val();
+                $.ajax({
+                    url: url,
+                    data: {
+                        'major': major
+                    },
+                    success: function(data) {
+                        $('#id_chapter').empty();
+                        $('#id_chapter').append('<option value="" disabled selected>Select a chapter</option>');
+                        $.each(data, function(key, value) {
+                            $('#id_chapter').append('<option value="' + value[0] + '">' + value[1] + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+
+{% block content %}
+<p>Your selected major is: {{ major }}</p>
+<p>Your selected chapter is: {{ chapter }}</p>
+
+<form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+</form>
+
+{% endblock %}
