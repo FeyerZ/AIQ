@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'home',
     'profilcopil',
     'agent',
+    'activitate',
+    'planetgame',
 ]
 
 MIDDLEWARE = [
