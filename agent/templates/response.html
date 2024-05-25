@@ -51,18 +51,21 @@ Home
     {% load custom_templates %}  
     <p>{{ response_1|insert_br|safe }}</p> 
     <div class="big-box">
-        {% for key, value in response_2.items %}
-            <div class="small-box">
-                <div class="photo">
-                    <img src="{{ response_3 }}" alt="Photo">
-                </div>
-                <div class="fun-facts">
-                    <p><strong>{{ key }}</strong></p>
-                    {% for fact in value %}
-                        <p>{{ fact }}</p>
-                    {% endfor %}
-                </div>
+    {% for key, value in response_2.items %}
+        <div class="small-box">
+            <div class="photo">
+                <!-- Assuming response_3 is a list of URLs -->
+                <img src="{{ response_3[forloop.counter0] }}" alt="Photo">
             </div>
-        {% endfor %}
+            <div class="fun-facts">
+                <p><strong>{{ key }}</strong></p>
+                {% for fact in value %}
+                    <p>{{ fact }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
     </div>
+
 {% endblock %}
+
