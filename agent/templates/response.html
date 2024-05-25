@@ -27,12 +27,42 @@ Home
 <!--    </script>-->
 {% endblock %}
 
-
 {% block content %}
-<!--<p>Your selected major is: {{ major }}</p>-->
-<!--<p>Your selected chapter is: {{ chapter }}</p>-->
+    <style>
+        .big-box {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 1200px; /* Adjust max-width as needed */
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .small-box {
+            width: calc(33.33% - 20px); /* Adjust width and margin as needed */
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+    </style>
 
-<h1>ChatGPT Response</h1>
-<p>{{ response }}</p>
-
+    <h1>ChatGPT Response</h1>
+    {% load custom_templates %}  
+    <p>{{ response_1|insert_br|safe }}</p> 
+    <div class="big-box">
+        {% for key, value in response_2.items %}
+            <div class="small-box">
+                <div class="photo">
+                    <img src="{{ response_3 }}" alt="Photo">
+                </div>
+                <div class="fun-facts">
+                    <p><strong>{{ key }}</strong></p>
+                    {% for fact in value %}
+                        <p>{{ fact }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
