@@ -2,12 +2,21 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from openai import OpenAI
 import os
+import openai
+from openai import AzureOpenAI
+# from django.conf import settings
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def get_chatgpt_response(prompt):
-    client = OpenAI(api_key='22f970b1d30b405f8c56ba8904255daf')
+    # client = OpenAI()
+    client = AzureOpenAI(azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+                         api_key=os.environ["AZURE_OPENAI_API_KEY"],
+                         api_version="2024-02-01")
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=os.environ["DEPLOYMENT_NAME"],
         messages=[
             # {"role": "system", "content": "You are the best teacher. You want to explain thoroughly as for a 5 years "
             #                               "old kid. Show result as topics that can be written on playing cards"},
@@ -30,7 +39,6 @@ def get_chatgpt_response(prompt):
             {"role": "user", "content": f"{prompt}"}
         ]
     )
-    # return response.choices[0].text.strip()
     return response.choices[0].message.content
 
 
@@ -56,9 +64,3 @@ def ask_chatgpt(request):
     return render(request, 'response.html', {'response': response,'major': major, 'chapter': chapter,
                                              'first_name': first_name, 'last_name': last_name, 'age_number': age_number,
                                              'interest_points': interest_points, 'personality': personality})
-
-
-# def agent(request):
-#     major = request.session.get('major')
-#     chapter = request.session.get('chapter')
-#     return render(request, "agent.html", {'major': major, 'chapter': chapter})
