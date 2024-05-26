@@ -35,7 +35,7 @@ def format_animal_facts(value):
             facts = [f'- {fact.capitalize()}' for fact in facts]
             #facts = ['- Can recognize their own reflection', '- Communicate using infrasound']
             #combine the animal name and facts
-            result.append(f'{animal}:\n{",\n ".join(facts)}\n')
+            result.append(f'{animal}:\n{", ".join(facts)}\n')
             #result = ['Elephant:\n- Can recognize their own reflection, - Communicate using infrasound']
 
     # Return the formatted result as a single string
