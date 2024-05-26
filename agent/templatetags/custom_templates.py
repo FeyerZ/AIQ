@@ -41,4 +41,6 @@ def format_animal_facts(value):
     # Return the formatted result as a single string
     return '\n'.join(result)
 
-
+@register.filter
+def divide(value, arg):
+    return int(value) // int(arg)

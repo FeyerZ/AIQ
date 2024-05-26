@@ -71,13 +71,13 @@ def print_images(request):
                'image': 'planetgame/pluto.jpg',
                'facts': [
                    'Pluto is classified as a dwarf planet and is part of the Kuiper Belt, a region of the solar system beyond the orbit of Neptune filled with small icy bodies.',
-                   'It has five known moons, with the largest, Charon, being about half the size of Pluto itself, making it more like a binary system than a planet with a moon.']
+                   'It has five known moons, with the largest, Charon, being about half the size of Pluto itself, making it more like a binary system than a planet with a moon.'
+               ]
               }
-             ]
-
-            context = {
-            'planets': planets
-        }
-        return render(request, 'planetgame/printable_images.html', context)
-def rhyme(request):
+            ]
+    context = {
+        'planets': planets
+    }
+    return render(request, 'planetgame/printable_images.html', context)
+def rhyme_story(request):
     return render(request, 'planetgame/rhyme.html')

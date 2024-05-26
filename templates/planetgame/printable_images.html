@@ -1,127 +1,179 @@
 {% extends 'base.html' %}  
 
 {% block title %}
-    Printable Planet Cards
+Printable Planet Cards
 {% endblock %}
 
 {% block content %}
-                {% load static %}
-    <style>
-        .big-box {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between; /* Ensure even spacing */
-            width: 100%;
-            max-width: 1200px; /* Adjust max-width as needed */
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+{% load static %}
+<style>
+    .big-box {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    .card {
+        perspective: 1000px;
+        width: calc(33.33% - 20px);
+        margin-bottom: 20px;
+        cursor: pointer;
+    }
+    .card-inner {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
+    .card.is-flipped .card-inner {
+        transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .card-front {
+        background-color: #f0f0f0;
+    }
+    .card-back {
+        background-color: #ffffff;
+        transform: rotateY(180deg);
+        padding: 10px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .card-back img {
+        width: 100%;
+        height: auto;
+        max-width: 150px;
+        max-height: 150px;
+        object-fit: cover;
+    }
+    .fun-facts {
+        text-align: left;
+        padding: 10px 0;
+    }
+    .print-button-container {
+        text-align: center;
+        margin: 20px 0;
+    }
+    .print-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        cursor: pointer;
+    }
+    .print-button:hover {
+        background-color: #0056b3;
+    }
 
-        .card {
-            perspective: 1000px;
-            width: calc(33.33% - 20px); /* Adjust width to fit 3 cards per row */
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
-
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 400px; /* Increase height as needed */
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
-        }
-
-        .card.is-flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .card-front {
-            background-color: #f0f0f0;
-        }
-
-        .card-back {
-            background-color: #ffffff;
-            transform: rotateY(180deg);
-            padding: 10px;
-            flex-direction: column;
-            align-items: center; /* Center content horizontally */
-            justify-content: center; /* Center content vertically */
-        }
-
-        .card-back img {
-            width: 100%;
-            height: auto;
-            max-width: 150px; /* Adjust as necessary */
-            max-height: 150px; /* Adjust as necessary */
-            object-fit: cover;
-        }
-
-        .fun-facts {
-            text-align: left;
-            padding: 10px 0;
-        }
-
-        .print-button-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .print-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s;
-            cursor: pointer;
-        }
-
-        .print-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    @media print {
+    body * {
+        visibility: hidden;
+    }
+    .big-box, .big-box * {
+        visibility: visible;
+    }
+    .big-box {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Center the cards horizontally */
+        align-items: flex-start;
+        padding: 20px; /* Add padding to ensure content is not too close to the edges */
+        box-sizing: border-box;
+    }
+    .print-button-container {
+        display: none;
+    }
+    .card {
+        width: calc(33.33% - 20px); /* Adjust the width to fit more cards per row */
+        margin: 10px; /* Add margin to separate cards */
+        height: auto; /* Adjust height to fit content */
+        box-sizing: border-box; /* Ensure proper box-sizing */
+        page-break-inside: avoid; /* Avoid breaking the card across pages */
+    }
+    .card-inner {
+        position: static; /* Ensure the card content is not positioned absolutely */
+        height: auto;
+    }
+    .card-front {
+        display: none; /* Hide the front side of the cards */
+    }
+    .card-back {
+        position: static; /* Ensure the card content is not positioned absolutely */
+        height: auto;
+        padding: 10px; /* Adjust padding for print */
+    }
+    .card-back img {
+        max-width: 100px;
+        max-height: 100px;
+        object-fit: cover; /* Ensure the image fits within the box */
+    }
+}
+</style>
 
     <h1>Printable Planet Cards</h1>
-    <div class="print-button-container">
-        <button class="print-button" onclick="window.print()">Print this page</button>
-    </div>
-        <div class="big-box">
-        {% for image in images %}
-        <div class="card" onclick="this.classList.toggle('is-flipped')">
-            <div class="card-inner">
-                <div class="card-front">
-                    <img src="{% static 'logo/logo.jpg' %}" alt="Logo" style="width: 100px; height: auto;">
-                </div>
-                <div class="card-back">
-                    <img src="{% static image %}" alt="Planet Image">
-                    <div class="fun-facts">
-                        <h3>Fun Facts</h3>
-                        <p>Fact 1</p>
-                        <p>Fact 2</p>
-                        <p>Fact 3</p>
-                    </div>
+<div class="print-button-container">
+    <button class="print-button" onclick="preparePrint()">Print this page</button>
+</div>
+<div class="big-box">
+    {% for planet in planets %}
+    <div class="card" onclick="this.classList.toggle('is-flipped')">
+        <div class="card-inner">
+            <div class="card-front">
+                <img src="{% static 'logo/logo.jpg' %}" alt="Logo" style="width: 100px; height: auto;">
+                <h3>{{ planet.name }}</h3>
+            </div>
+            <div class="card-back">
+                <img src="{% static planet.image %}" alt="{{ planet.name }}">
+                <div class="fun-facts">
+                    <h3>{{ planet.name }}</h3>
+                    {% for fact in planet.facts %}
+                    <p>{{ fact }}</p>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        {% endfor %}
     </div>
+    {% endfor %}
+</div>
+<script>
+    function preparePrint() {
+        // Add 'is-flipped' class to all cards
+        var cards = document.querySelectorAll('.card');
+        cards.forEach(function(card) {
+            card.classList.add('is-flipped');
+        });
+
+        // Wait a bit to ensure the cards are flipped before opening the print dialog
+        setTimeout(function() {
+            window.print();
+        }, 100);
+    }
+</script>
 {% endblock %}
