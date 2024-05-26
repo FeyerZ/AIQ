@@ -3,8 +3,8 @@ import json
 import random
 from openai import AzureOpenAI
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Question, UserResponse
-from .forms import QuizForm
+# from .models import Question, UserResponse
+# from .forms import QuizForm
 from dotenv import load_dotenv
 import os
 
@@ -44,7 +44,9 @@ def generate_quiz(request):
         return redirect('ask_chatgpt')
 
     questions = generate_quiz_from_response(response)
-    request.session['quiz_questions'] = [q.id for q in questions]
+    request.session['quiz_questions']['question'] = [q.question_text for q in questions]
+    request.session['quiz_questions']['options'] = [q.questio_options for q in questions]
+    request.session['quiz_questions']['correct_answer'] = [q.correct_answer for q in questions]
 
     return redirect('start_quiz')
 
@@ -54,10 +56,15 @@ def start_quiz(request):
     if not question_ids:
         return redirect('ask_chatgpt')
 
-    question = get_object_or_404(Question, id=question_ids[0])
-    form = QuizForm(question=question)
-
-    return render(request, 'quiz/quiz.html', {'form': form, 'question': question})
+    # question = get_object_or_404(Question, id=question_ids[0])
+    # form = QuizForm(question=question)
+    print(question_ids)
+    return render(request, 'quiz.html',
+                  # {
+                  #     'form': form,
+                  #     'question': question
+                  # }
+                  )
 
 
 def submit_quiz(request):
@@ -84,19 +91,19 @@ def generate_quiz_from_response(response):
     response = client.chat.completions.create(
         model=os.environ["DEPLOYMENT_NAME"],
         messages=[
-            {"role": "system", "content": f"You are the best teacher. {response}"},
+            {"role": "system", "content": f"Content: {response}"},
             # {"role": "user", "content": "Who won the world series in 2020?"},
             # {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-            {"role": "user", "content": "Create a quiz with a, b, c answers and one correct answer. Return the answer in json."}
+            {"role": "user", "content": "Create a quiz from Content with multiple questions and each should have a, b, c answers and one correct answer. Return the answer in json."}
         ]
     )
     print(response.choices[0].message.content)
     # return response.choices[0].message.content
 
     js = response.choices[0].message.content
-    j = json.loads(js)
-    q = Question(**j)
-    print(j)
+    # j = json.loads(js)
+    # q = Question(**j)
+    # print(j)
     return response.choices[0].message.content
     #
     #
