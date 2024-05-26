@@ -10,8 +10,8 @@ def home(request):
     if request.method == 'POST':
         form = SelectionForm(request.POST)
         if form.is_valid():
-            request.session['major'] = form.cleaned_data['major']
-            request.session['chapter'] = form.cleaned_data['chapter']
+            request.session['domain'] = form.cleaned_data['domain']
+            request.session['subdomain'] = form.cleaned_data['subdomain']
             return redirect('confirmation')
     else:
         form = SelectionForm()
@@ -30,11 +30,11 @@ def home(request):
 #     return render(request, 'base_new.html', {'form': form})
 
 def load_chapters(request):
-    major = request.GET.get('major')
-    chapters = SelectionForm.CHAPTER_CHOICES.get(major, [])
-    return JsonResponse(chapters, safe=False)
+    domain = request.GET.get('domain')
+    subdomain = SelectionForm.CHAPTER_CHOICES.get(domain, [])
+    return JsonResponse(subdomain, safe=False)
 
 def confirmation(request):
-    major = request.session.get('major')
-    chapter = request.session.get('chapter')
-    return render(request, 'confirmation.html', {'major': major, 'chapter': chapter})
+    domain = request.session.get('domain')
+    subdomain = request.session.get('subdomain')
+    return render(request, 'confirmation.html', {'domain': domain, 'subdomain': subdomain})

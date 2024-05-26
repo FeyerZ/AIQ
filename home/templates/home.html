@@ -6,19 +6,19 @@ Home
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#id_major').change(function() {
+            $('#id_domain').change(function() {
                 var url = "{% url 'load_chapters' %}";
-                var major = $(this).val();
+                var domain = $(this).val();
                 $.ajax({
                     url: url,
                     data: {
-                        'major': major
+                        'domain': domain
                     },
                     success: function(data) {
-                        $('#id_chapter').empty();
-                        $('#id_chapter').append('<option value="" disabled selected>In detail</option>');
+                        $('#id_subdomain').empty();
+                        $('#id_subdomain').append('<option value="" disabled selected>In detail</option>');
                         $.each(data, function(key, value) {
-                            $('#id_chapter').append('<option value="' + value[0] + '">' + value[1] + '</option>');
+                            $('#id_subdomain').append('<option value="' + value[0] + '">' + value[1] + '</option>');
                         });
                     }
                 });

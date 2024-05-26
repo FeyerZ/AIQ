@@ -40,13 +40,13 @@ class SelectionForm(forms.Form):
         ],
     }
 
-    major = forms.ChoiceField(choices=MAJOR_CHOICES)
-    chapter = forms.ChoiceField(choices=[])
+    domain = forms.ChoiceField(choices=MAJOR_CHOICES)
+    subdomain = forms.ChoiceField(choices=[])
 
     def __init__(self, *args, **kwargs):
         super(SelectionForm, self).__init__(*args, **kwargs)
-        if 'major' in self.data:
-            major = self.data.get('major')
-            self.fields['chapter'].choices = self.CHAPTER_CHOICES.get(major, [])
+        if 'domain' in self.data:
+            domain = self.data.get('domain')
+            self.fields['subdomain'].choices = self.CHAPTER_CHOICES.get(domain, [])
         else:
-            self.fields['chapter'].choices = []
+            self.fields['subdomain'].choices = []
