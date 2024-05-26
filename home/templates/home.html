@@ -16,7 +16,7 @@ Home
                     },
                     success: function(data) {
                         $('#id_chapter').empty();
-                        $('#id_chapter').append('<option value="" disabled selected>Select a chapter</option>');
+                        $('#id_chapter').append('<option value="" disabled selected>In detail</option>');
                         $.each(data, function(key, value) {
                             $('#id_chapter').append('<option value="' + value[0] + '">' + value[1] + '</option>');
                         });

@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
-{% load static %}  
-<script>  
-    document.addEventListener('DOMContentLoaded', function() {  
-        const cards = document.querySelectorAll('.card');  
-  
-        cards.forEach(card => {  
-            card.addEventListener('click', function() {  
-                this.querySelector('.card-inner').classList.toggle('is-flipped');  
-            });  
-        });  
-    });  
-</script>  
+{% load static %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                this.querySelector('.card-inner').classList.toggle('is-flipped');
+            });
+        });
+    });
+</script>
 
 {% block title %}
 Home
@@ -41,112 +41,143 @@ Home
 {% endblock %}
 
 {% block content %}  
-<style>  
-        .big-box {  
-            display: flex;  
-            flex-wrap: wrap;  
-            justify-content: space-between; /* Ensure even spacing */  
-            width: 100%;  
-            max-width: 1200px; /* Adjust max-width as needed */  
-            margin: 0 auto;  
-            padding: 20px;  
-            box-sizing: border-box;  
-        }  
-  
-        .card {  
-            perspective: 1000px;  
-            width: calc(33.33% - 20px); /* Adjust width to fit 3 cards per row */  
-            margin-bottom: 20px;  
-            cursor: pointer;  
-        }  
-  
-        .card-inner {  
-            position: relative;  
-            width: 100%;  
-            height: 400px; /* Increase height as needed */  
-            text-align: center;  
-            transition: transform 0.8s;  
-            transform-style: preserve-3d;  
-        }  
-  
-        .card.is-flipped .card-inner {  
-            transform: rotateY(180deg);  
-        }  
-  
-        .card-front, .card-back {  
-            position: absolute;  
-            width: 100%;  
-            height: 100%;  
-            backface-visibility: hidden;  
-            border: 1px solid #ccc;  
-            box-sizing: border-box;  
-            
-            display: flex;  
-            justify-content: center;  
-            align-items: center;  
-            flex-direction: column;  
-        }  
-  
-        .card-front {  
-            background-color: #f0f0f0;
-            
-        }  
-        .card-front.
-        .card-back {  
-            background-color: #ffffff;  
-            transform: rotateY(180deg);  
-            padding: 10px;  
-            flex-direction: column;  
-            align-items: center;
+<style>
+        .big-box {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between; /* Ensure even spacing */
+            width: 100%;
+            max-width: 1200px; /* Adjust max-width as needed */
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            perspective: 1000px;
+            width: calc(33.33% - 20px); /* Adjust width to fit 3 cards per row */
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 400px; /* Increase height as needed */
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .card.is-flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            display: flex;
             justify-content: center;
-        }  
-  
-        .card-back img {  
-            width: 100%;  
-            height: auto;  
-            max-width: 150px; /* Adjust as necessary */  
-            max-height: 150px; /* Adjust as necessary */  
-            object-fit: cover;  
-        }  
-  
-        .fun-facts {  
-            text-align: left;  
-            padding: 10px 0;  
-        }  
-    </style>  
-    <h1>ChatGPT Response</h1>  
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .card-front {
+            background-color: #f0f0f0;
+        }
+
+        .card-back {
+            background-color: #ffffff;
+            transform: rotateY(180deg);
+            padding: 10px;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+            justify-content: center; /* Center content vertically */
+        }
+
+        .card-back img {
+            width: 100%;
+            height: auto;
+            max-width: 150px; /* Adjust as necessary */
+            max-height: 150px; /* Adjust as necessary */
+            object-fit: cover;
+        }
+
+        .fun-facts {
+            text-align: left;
+            padding: 10px 0;
+        }
+
+        .phrases-container {
+            display: flex;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .column {
+            flex: 1;
+            padding: 10px;
+            border-right: 1px solid rgba(0, 0, 0, 0.1); /* Faded border */
+        }
+
+        .column:last-child {
+            border-right: none; /* Remove right border for the last column */
+        }
+
+        .column p {
+            margin: 5px 0;
+        }
+    </style>
+    <h1>Rhymed poem</h1>
     {% load custom_templates %}  
     {% load custom_filters %}  
-    <!-- Iterate through response_1 and print each phrase on a new line -->  
-    {% for phrase in response_1 %}  
-    <p>{{ phrase }}</p> 
-    {% endfor %}
-         <div class="big-box">  
-        {% for key, value in response_2.items %}  
-        <div class="card" onclick="this.classList.toggle('is-flipped')">  
-            <div class="card-inner">  
-                <div class="card-front">  
-                    <img src="{% static 'logo/logo.jpg' %}" alt="Logo">
-                </div>  
-                <div class="card-back">  
-                    <div class="photo">  
-                        {% if forloop.counter0 < response_3|length %}  
-                        <img src="{{ response_3|index:forloop.counter0 }}" alt="Photo">  
-                        {% else %}  
-                        <img src="https://via.placeholder.com/150" alt="Fallback Photo"> <!-- Fallback image if URLs are fewer than items -->  
-                        {% endif %}  
-                    </div>  
-                    <div class="fun-facts">  
-                        <p><strong>{{ key }}</strong></p>  
-                        {% for fact in value %}  
-                        <p>{{ fact }}</p>  
-                        {% endfor %}  
-                    </div>  
-                </div>  
-            </div>  
-        </div>  
-        {% endfor %}  
-    </div>  
-{% endblock %}  
-
-
+    <!-- Iterate through response_1 and print each phrase on a new line -->
+    <div class="phrases-container">
+    <div class="column">
+            {% for phrase in response_1|slice:":forloop.counter|divisibleby:2" %}
+            <p>{{ phrase }}</p>
+            {% endfor %}
+        </div>
+            <div class="column">
+            {% for phrase in response_1|slice:"forloop.counter|divisibleby:2:" %}
+            <p>{{ phrase }}</p>
+            {% endfor %}
+        </div>
+    </div>
+  <h1>Playing cards</h1>
+    <div class="big-box">
+        {% for key, value in response_2.items %}
+        <div class="card" onclick="this.classList.toggle('is-flipped')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="{% static 'logo/logo.jpg' %}" alt="Logo" style="width: 100px; height: auto;">
+                </div>
+                <div class="card-back">
+                    <div class="photo">
+                        {% if forloop.counter0 < response_3|length %}
+                        <img src="{{ response_3|index:forloop.counter0 }}" alt="Photo">
+                        {% else %}
+                        <img src="https://via.placeholder.com/150" alt="Fallback Photo"> <!-- Fallback image if URLs are fewer than items -->
+                        {% endif %}
+                    </div>
+                    <div class="fun-facts">
+                        <p><strong>{{ key }}</strong></p>
+                        {% for fact in value %}
+                        <p>{{ fact }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

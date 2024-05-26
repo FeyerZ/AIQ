@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Printable Planet Cards
+{% endblock %}
+
+{% block content %}
+    <style>
+    .phrases-container {
+            display: flex;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .column {
+            flex: 1;
+            padding: 10px;
+            border-right: 1px solid rgba(0, 0, 0, 0.1); /* Faded border */
+        }
+
+        .column:last-child {
+            border-right: none; /* Remove right border for the last column */
+        }
+
+        .column p {
+            margin: 5px 0;
+        }
+    </style>
+    <div>
+
+    </div>
+{% endblock %}

@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
     path('', views.print_images, name='card_list'),
-    path('printable/', views.print_images, name='printable_cards'),
+    path('', views.print_images, name='rhymed_story'),
 ]
 
 if settings.DEBUG:
