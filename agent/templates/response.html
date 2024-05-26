@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load mathfilters %}
+
 {% load static %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -142,7 +142,7 @@ Home
     {% load custom_templates %}  
     {% load custom_filters %}  
     <!-- Iterate through response_1 and print each phrase on a new line -->
-    <div class="phrases-container">  
+<div class="phrases-container">  
     <div class="column">  
         {% for phrase in response_1 %}  
             <p>{{ phrase }}</p>  
@@ -159,7 +159,7 @@ Home
             {% endif %}  
         {% endfor %}  
     </div>  
-</div>  
+</div>     
   <h1>Playing cards</h1>
     <div class="big-box">
         {% for key, value in response_2.items %}

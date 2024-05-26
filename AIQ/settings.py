@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'agent',
     'activitate',
     'planetgame',
-    'mathfilters',
     'quiz',
 ]
 
