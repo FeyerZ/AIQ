@@ -130,4 +130,4 @@ watchdog==4.0.0
 wcwidth==0.2.13
 Werkzeug==3.0.3
 yarl==1.9.4
-pronouncing==0.2.0.tar.gz
+pronouncing==0.2.0
