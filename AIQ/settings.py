@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'activitate',
     'planetgame',
     'mathfilters',
+    'quiz',
 ]
 
 MIDDLEWARE = [
