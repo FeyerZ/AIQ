@@ -63,45 +63,10 @@ textarea {
 </style>
 <p>Your selected major is: {{ major }}</p>
 <p>Your selected chapter is: {{ chapter }}</p>
-<!--<form method="post">-->
-<!--        {% csrf_token %}-->
-<!--        {{ form.as_table }}-->
-<!--        <input type="submit" value="Submit">-->
-<!--</form>-->
-<!--form.as_p-->
-<!--form.as_ul-->
-<!--form.as_table-->
 <form method="post">
-    {{ form.non_field_errors }}
-    <div>
-        <div class="fieldWrapper">
-            {{ form.subject.errors }}
-            <label for="id_first_name">First Name:</label>
-            {{ form.first_name }}
-        </div>
-        <div class="fieldWrapper">
-            {{ form.subject.errors }}
-            <label for="id_last_name">Last Name:</label>
-            {{ form.last_name }}
-        </div>
-        <div class="fieldWrapper">
-            {{ form.age_number.errors }}
-            <label for="id_age_number">Age:</label>
-            {{ form.age_number }}
-        </div>
-        <div class="fieldWrapper">
-            {{ form.interest_points.errors }}
-            <label for="id_interest_points">Interest:</label>
-            {{ form.interest_points }}
-        </div>
-        <div class="fieldWrapper">
-            {{ form.personality.errors }}
-            <label for="id_personality">Personality</label>
-            {{ form.personality }}
-        </div>
-        <div></div>
-    </div>
-    <p><input type="submit" value="Send message" /></p>
+        {% csrf_token %}
+        {{ form.as_table }}
+        <input type="submit" value="Submit">
 </form>
 <p>{% include 'profil_psihologic.html' %} </p>
 
