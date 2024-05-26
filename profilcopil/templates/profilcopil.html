@@ -29,14 +29,45 @@ Home
 
 
 {% block content %}
+<style>
+    form {
+  margin: 0 auto;
+  width: 50%;
+}
+
+label {
+  display: block;
+}
+
+input,
+textarea {
+  width: 100%;
+}
+
+.form-field-wrapper {
+  margin-bottom: 10px;
+}
+
+.form-field-wrapper.flex {
+  display: flex;
+}
+
+.form-field-wrapper.flex>div {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.form-field-wrapper.flex>div:first-child {
+  margin-left: 0;
+}
+</style>
 <p>Your selected major is: {{ major }}</p>
 <p>Your selected chapter is: {{ chapter }}</p>
 <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.as_table }}
         <input type="submit" value="Submit">
 </form>
-
 <p>{% include 'profil_psihologic.html' %} </p>
 
 {% endblock %}
