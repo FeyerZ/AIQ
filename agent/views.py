@@ -58,23 +58,23 @@ def get_keys_from_response(response):
     return keys
 
 def ask_chatgpt(request):
-    major = request.session.get('major', 'unknown major')
-    chapter = request.session.get('chapter', 'unknown chapter')
+    domain = request.session.get('domain', 'unknown domain')
+    subdomain = request.session.get('subdomain', 'unknown subdomain')
     first_name = request.session.get('first_name', 'unknown first name')
     last_name = request.session.get('last_name', 'unknown last name')
     age_number = request.session.get('age_number', 'unknown age number')
     interest_points = request.session.get('interest_points', 'unknown interest points')
     personality = request.session.get('personality', 'unknown personality')
 
-    if major == 'unknown major' or chapter == 'unknown chapter' or age_number == 'unknown age number' \
+    if domain == 'unknown domain' or subdomain == 'unknown subdomain' or age_number == 'unknown age number' \
             or interest_points == 'unknown interest points' or personality == 'unknown personality':
         return redirect('agent')  # Redirect to the main form if selections are missing
 
     # Prompt 1
     prompt_1 = (
         f"You are the best teacher. You want to thoroughly write a poem for a {age_number} year old kid. "
-        f"His interest points are {interest_points} and he is {personality}. In the poem, include more about {chapter} "
-        f"in the field of {major}. Each row must have the same number of syllables, and they must end in a rhyme. "
+        f"His interest points are {interest_points} and he is {personality}. In the poem, include more about {subdomain} "
+        f"in the field of {domain}. Each row must have the same number of syllables, and they must end in a rhyme. "
         f"Don't write the number of syllables, just the poem. When you make the rhyme, write a new line for every rhyme so it is clear where the rhyme is."
     )
 
@@ -120,12 +120,13 @@ def ask_chatgpt(request):
     #this is the response_3_urls: ['https://dalleproduse.blob.core.windows.net/private/images/65d971e1-a19c-4872-9747-13568a1fc6cb/generated_00.png?se=2024-05-27T07%3A00%3A29Z&sig=tYUHnLQVpAU3jd1U65kwNQn%2FiI8S4ybPLVJw%2FLJ0dTc%3D&ske=2024-05-29T12%3A38%3A41Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-22T12%3A38%3A41Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/3d95377c-c7de-4e2b-9a70-2a9c107b3508/generated_00.png?se=2024-05-27T07%3A00%3A42Z&sig=0pJPJaTSZstxab3LK6ikB8tW6g4hBWFChdQzmS%2Bx0ZQ%3D&ske=2024-06-01T13%3A36%3A00Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-25T13%3A36%3A00Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/c97ee8b1-b719-4386-b272-f8700bc9fb63/generated_00.png?se=2024-05-27T07%3A00%3A54Z&sig=qVr88rF1CteyQdDWexNqaL14VGdb7o2NsGswPc6YXLc%3D&ske=2024-05-29T12%3A38%3A41Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-22T12%3A38%3A41Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/259deac9-a667-4ebe-9aca-69937b537350/generated_00.png?se=2024-05-27T07%3A01%3A31Z&sig=OffBFqddnez5IL696OJQnvUNCgpfPyyk7gCLJY0tres%3D&ske=2024-06-01T13%3A36%3A00Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-25T13%3A36%3A00Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/7113893b-da37-42c1-9d8b-89ccbeb73cab/generated_00.png?se=2024-05-27T07%3A01%3A44Z&sig=wvETB9K1MkElBmqH%2FueghfCv9O8OET4d1Q30OJv49Yw%3D&ske=2024-06-01T13%3A36%3A00Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-25T13%3A36%3A00Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/d7785d17-d22f-4e04-9c42-cd05723ea28f/generated_00.png?se=2024-05-27T07%3A01%3A58Z&sig=41hPnWEYVwAS2PHkBk5OS5FIZj41m4rgUgAj2Ci4xz4%3D&ske=2024-05-29T12%3A38%3A41Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-22T12%3A38%3A41Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/d89aed10-5f85-4efd-9956-c85fadf2b923/generated_00.png?se=2024-05-27T07%3A02%3A33Z&sig=Xxql4cGcsJ0eOKI2Oh6RYML3%2BrB1%2FrzG3Dj4bUhieXk%3D&ske=2024-05-29T08%3A06%3A31Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-22T08%3A06%3A31Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/c684ddeb-a535-4ba5-9ded-16997247811b/generated_00.png?se=2024-05-27T07%3A02%3A43Z&sig=wVXKLmnTLohs70EuZnT%2FECbu22cEss6CJNUEGXOoRiM%3D&ske=2024-05-29T12%3A38%3A41Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-22T12%3A38%3A41Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/60bc9c77-167b-43f0-bc1b-32f60d38e07e/generated_00.png?se=2024-05-27T07%3A02%3A58Z&sig=Vr5K4uGCkSbn4nA69xVMdMuAbshyDEH74vISag6m6Mc%3D&ske=2024-06-01T13%3A36%3A00Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-25T13%3A36%3A00Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02']
     #make it so response_1 transfers each row to a list by the separator \n
     response_1_list = response_1.split('\n')
+
     return render(request, 'response.html', {
         'response_1': response_1_list,
         'response_2': response_2,
         'response_3': response_3_urls,
-        'major': major,
-        'chapter': chapter,
+        'domain': domain,
+        'subdomain': subdomain,
         'first_name': first_name,
         'last_name': last_name,
         'age_number': age_number,

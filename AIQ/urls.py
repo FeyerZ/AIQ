@@ -25,6 +25,7 @@ urlpatterns = [
     path("", include("home.urls")),
     path("profilcopil/", include("profilcopil.urls")),
     path("agent/", include("agent.urls")),
+    path("quiz/", include("quiz.urls")),
     path('planetgame/', include('planetgame.urls')),
 ]
 

@@ -2,7 +2,7 @@ from django import forms
 
 class SelectionForm(forms.Form):
     MAJOR_CHOICES = [
-        ('disabled selected', 'Select a Major'),
+        ('disabled selected', 'Select a Domain'),
         ('computer_science', 'Computer Science'),
         ('business', 'Business Administration'),
         ('engineering', 'Engineering'),
