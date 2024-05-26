@@ -27,45 +27,63 @@ Home
 <!--    </script>-->
 {% endblock %}
 
-{% block content %}
-    <style>
-        .big-box {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            width: 100%;
-            max-width: 1200px; /* Adjust max-width as needed */
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .small-box {
-            width: calc(33.33% - 20px); /* Adjust width and margin as needed */
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-    </style>
-
-    <h1>ChatGPT Response</h1>
+{% block content %}  
+    <style>  
+        .big-box {  
+            display: flex;  
+            flex-wrap: wrap;  
+            justify-content: space-between; /* Ensure even spacing */  
+            width: 100%;  
+            max-width: 1200px; /* Adjust max-width as needed */  
+            margin: 0 auto;  
+            padding: 20px;  
+            box-sizing: border-box;  
+        }  
+        .small-box {  
+            width: calc(33.33% - 20px); /* Adjust width to fit 3 cards per row */  
+            margin-bottom: 20px;  
+            padding: 10px;  
+            border: 1px solid #ccc;  
+            box-sizing: border-box;  
+            display: flex;  
+            flex-direction: column;  
+            align-items: center;  
+        }  
+        .small-box img {  
+            width: 100%;  
+            height: auto;  
+            max-width: 150px; /* Adjust as necessary */  
+            max-height: 150px; /* Adjust as necessary */  
+            object-fit: cover;  
+        }  
+        .fun-facts {  
+            text-align: center;  
+        }  
+    </style>  
+  
+    <h1>ChatGPT Response</h1>  
     {% load custom_templates %}  
-    <p>{{ response_1|insert_br|safe }}</p> 
-    <div class="big-box">
-    {% for key, value in response_2.items %}
-        <div class="small-box">
-            <div class="photo">
-                <!-- Assuming response_3 is a list of URLs -->
-                <img src="https://dalleproduse.blob.core.windows.net/private/images/8c870b46-0fae-463a-8971-8484613b8a12/generated_00.png?se=2024-05-26T19%3A37%3A15Z&sig=VZiJy%2BzgsglIJlo5nHxBY%2BykHVAmdFcML6twAMXlfEM%3D&ske=2024-06-01T13%3A36%3A00Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-25T13%3A36%3A00Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02" alt="Photo">
-            </div>
-            <div class="fun-facts">
-                <p><strong>{{ key }}</strong></p>
-                {% for fact in value %}
-                    <p>{{ fact }}</p>
-                {% endfor %}
-            </div>
-        </div>
-    {% endfor %}
-    </div>
+    {% load custom_filters %}  
+    <p>{{ response_1|insert_br|safe }}</p>  
+     <div class="big-box">  
+        {% for key, value in response_2.items %}  
+        <div class="small-box">  
+            <div class="photo">  
+                {% if forloop.counter0 < response_3|length %}  
+                <img src="{{ response_3|index:forloop.counter0 }}" alt="Photo">  
+                {% else %}  
+                <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.stellarinfo.com%2Fblog%2Ferror-in-loading-media-file-could-not-be-played%2F&psig=AOvVaw2k_xnBMiLNXLG4N2ewx10T&ust=1716793718221000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCOjbzZDhqoYDFQAAAAAdAAAAABAE" alt="Photo"> <!-- Fallback image if URLs are fewer than items -->  
+                {% endif %}  
+            </div>  
+            <div class="fun-facts">  
+                <p><strong>{{ key }}</strong></p>  
+                {% for fact in value %}  
+                <p>{{ fact }}</p>  
+                {% endfor %}  
+            </div>  
+        </div>  
+        {% endfor %}  
+    </div>  
+{% endblock %}  
 
-{% endblock %}
 

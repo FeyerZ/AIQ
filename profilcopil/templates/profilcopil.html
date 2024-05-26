@@ -63,15 +63,17 @@ textarea {
 </style>
 <p>Your selected major is: {{ major }}</p>
 <p>Your selected chapter is: {{ chapter }}</p>
-<!--<form method="post">-->
-<!--        {% csrf_token %}-->
-<!--        {{ form.as_table }}-->
-<!--        <input type="submit" value="Submit">-->
-<!--</form>-->
+<form method="post">
+       {% csrf_token %}
+       {{ form.as_table }}
+       <input type="submit" value="Submit">
+</form>
 <!--form.as_p-->
 <!--form.as_ul-->
 <!--form.as_table-->
-<form method="post">
+<!--<form method="post">
+    {{ form.as_table }}
+    {% csrf_token %}
     {{ form.non_field_errors }}
     <div>
         <div class="fieldWrapper">
@@ -99,10 +101,10 @@ textarea {
             <label for="id_personality">Personality</label>
             {{ form.personality }}
         </div>
-        <div></div>
     </div>
-    <p><input type="submit" value="Send message" /></p>
+    <p><input type="submit" value="Submit" /></p>
 </form>
+--->
 <p>{% include 'profil_psihologic.html' %} </p>
 
 {% endblock %}
