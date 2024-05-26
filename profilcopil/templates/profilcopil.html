@@ -65,9 +65,10 @@ textarea {
 </br>
 </br>
 <form method="post">
-        {% csrf_token %}
-        {{ form.as_table }}
-        <input type="submit" value="Submit">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <br><br>
+    <input type="submit" value="Submit">
 </form>
 </br>
 </br>

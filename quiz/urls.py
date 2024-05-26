@@ -19,11 +19,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.start_quiz, name='start_quiz'),
+    # path('', views.start_quiz, name='start_quiz'),
     path('submit/', views.submit_quiz, name='submit_quiz'),
     # path('generate/', views.generate_quiz, name='generate_quiz'),
     # path('ask_chatgpt_question/', views.ask_chatgpt_question, name='ask_chatgpt_question'),
     # path('', views.generate_quiz_from_response, name='generate_quiz_from_response'),
-    path('', views.generate_quiz, name='generate_quiz'),
+    # path('', views.generate_quiz, name='generate_quiz'),
+    path('', views.quiz_view, name='quiz'),
 
 ]

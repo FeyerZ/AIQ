@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'agent',
     'activitate',
     'planetgame',
+    'quiz',
 ]
 
 MIDDLEWARE = [
