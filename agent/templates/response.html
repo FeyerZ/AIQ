@@ -137,6 +137,18 @@ Home
         .column p {
             margin: 5px 0;
         }
+        table {
+        width: 100%;
+        border-collapse: collapse;
+        }
+        th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
     <h1>Rhymed poem</h1>
     {% load custom_templates %}  
@@ -159,7 +171,25 @@ Home
             {% endif %}  
         {% endfor %}  
     </div>  
-</div>     
+</div>
+    {% if paired_words %}
+    <table>
+        <thead>
+            <tr>
+                <th>Words</th>
+                <th>Translation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for word, translation in paired_words %}
+                <tr>
+                    <td>{{ word }}</td>
+                    <td>{{ translation }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
   <h1>Playing cards</h1>
     <div class="big-box">
         {% for key, value in response_2.items %}

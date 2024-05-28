@@ -112,8 +112,8 @@ def quiz_view(response):
 
     for i, question in enumerate(response_quiz_list):
 
-        question_text = f"{question["question"]}"
-        correct_answer = f"{question["correct_answer"]}"
+        question_text = f'{question["question"]}'
+        correct_answer = f'{question["correct_answer"]}'
 
         wrong_answers = [sent for j, sent in enumerate(question["options"]) if j != i]
         wrong_answers = random.sample(wrong_answers, min(2, len(wrong_answers)))  # take 2 wrong answers

@@ -4,10 +4,11 @@ import re
 from dotenv import load_dotenv
 from django.shortcuts import render, redirect
 from openai import AzureOpenAI
-
+import io
+import sys
+import logging
 load_dotenv()
-
-
+logger = logging.getLogger('debug_logger')
 def get_chatgpt_response(prompt):
     client_text = AzureOpenAI(
         azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -58,6 +59,7 @@ def get_keys_from_response(response):
     return keys
 
 def ask_chatgpt(request):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     domain = request.session.get('domain', 'unknown domain')
     subdomain = request.session.get('subdomain', 'unknown subdomain')
     first_name = request.session.get('first_name', 'unknown first name')
@@ -71,12 +73,23 @@ def ask_chatgpt(request):
         return redirect('agent')  # Redirect to the main form if selections are missing
 
     # Prompt 1
-    prompt_1 = (
+    if domain != 'languages':
+        prompt_1= (
         f"You are the best teacher. You want to thoroughly write a poem for a {age_number} year old kid. "
         f"His interest points are {interest_points} and he is {personality}. In the poem, include more about {subdomain} "
         f"in the field of {domain}. Each row must have the same number of syllables, and they must end in a rhyme. "
         f"Don't write the number of syllables, just the poem. When you make the rhyme, write a new line for every rhyme so it is clear where the rhyme is."
     )
+    else:
+        prompt_1 = (
+            f"You are the best teacher. You want to thoroughly write a poem for a {age_number} year old kid. "
+            f"His interest points are {interest_points} and he is {personality}. In the poem, include words in {subdomain} language using that language's letters, and don't write it's pronunciation words that an {age_number} year old would learn. "
+            f". Each row must have the same number of syllables, and they must end in a rhyme. "
+            f"Don't write the number of syllables, just the poem. When you make the rhyme, write a new line for every rhyme so it is clear where the rhyme is."
+            f"At the end of the response, write a new line and write 'HHHHH' so it is clear where the poem ends."
+            f"then write the words in {subdomain} each on a new line."
+        )
+
 
     # Prompt 2: Respond in the format json[{ "animal": response1, "fun_fact1": response2, "fun_fact2": response3 } ] 9 animals
     prompt_2 = (
@@ -88,10 +101,38 @@ def ask_chatgpt(request):
         response_2 = get_chatgpt_response(prompt_2)
     except Exception as e:
         print(f"Error in getting responses from GPT: {e}")
-        return render(request, 'error.html', {'error': 'Unable to get responses from GPT'})
+        return render(request, '', {'error': 'Unable to get responses from GPT'})
+    response_1, word_list = response_1.split('HHHHH')
+    #make a list of strings from word_list
+    #delete the elements that are empty strings
+    word_list = word_list.split('\n')
+    word_list = [word for word in word_list if word.strip()]
+    final_word_list = []
+    #add all words from word_list to a file
+    with open('word_list.txt', 'w', encoding='utf-8') as a:
+        for word in word_list:
+            a.write(word + '\n')
+    for word in word_list:
+        prompt_for_translation = ("translate " + word + " to English, don't say anything else, just the word and the translated word and it's pronunciation in " + subdomain + " language separated by a =, each word on a new line in this format: word (pronunciation) = translated word ")
+        try:
+            response_for_translation = get_chatgpt_response(prompt_for_translation)
+            with open('open_ai_response.txt', 'w', encoding='utf-8') as g:
+                g.write(response_for_translation)
+            response_for_translation = response_for_translation.split('\n')
+            original_word_and_pronunciation = response_for_translation[0].split('=')[0]
+            translated_word = response_for_translation[0].split('=')[1]
+            original_word_and_pronunciation = original_word_and_pronunciation.strip()
+            translated_word = translated_word.strip()
+            final_word_list.append(original_word_and_pronunciation)
+            final_word_list.append(translated_word)
+            with open('final_word_list.txt', 'w', encoding='utf-8') as b:
+                for word in final_word_list:
+                    b.write(word + '\n')
+        except Exception as e:
+            print(f"Error in getting responses from GPT: {e}")
+            return render(request, '', {'error': 'Unable to get responses from GPT'})
 
     response_2 = response_2[8:-3]  # Adjust slicing as needed
-    print(response_1)
     response_2_keys = get_keys_from_response(response_2)
     response_3_urls = []
     for key in response_2_keys:
@@ -100,33 +141,29 @@ def ask_chatgpt(request):
             f"in the portrait orientation, realistic, simple"
         )
         try:
-            response_3 = get_dalle_response(prompt_3)
-            response_3_urls.append(response_3)
+            #response_3 = get_dalle_response(prompt_3)
+            #response_3_urls.append(response_3)
             print("photo generated successfully")
         except Exception as e:
-            print(f"Error in getting response from DALL-E: {e}")
+            #print(f"Error in getting response from DALL-E: {e}")
             # Handle the error as needed, for now, appending None as placeholder
             response_3_urls.append(None)
 
-    # Debugging response_2
-    # print(response_2)
-    # Parse response_2 JSON with error handling
     try:
         response_2 = json.loads(response_2)
     except json.JSONDecodeError:
         print("JSONDecodeError: Unable to parse response_2")
         response_2 = {}
-    #print(response_3_urls)
-    #this is the response_3_urls: ['https://dalleproduse.blob.core.windows.net/private/images/65d971e1-a19c-4872-9747-13568a1fc6cb/generated_00.png?se=2024-05-27T07%3A00%3A29Z&sig=tYUHnLQVpAU3jd1U65kwNQn%2FiI8S4ybPLVJw%2FLJ0dTc%3D&ske=2024-05-29T12%3A38%3A41Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-22T12%3A38%3A41Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/3d95377c-c7de-4e2b-9a70-2a9c107b3508/generated_00.png?se=2024-05-27T07%3A00%3A42Z&sig=0pJPJaTSZstxab3LK6ikB8tW6g4hBWFChdQzmS%2Bx0ZQ%3D&ske=2024-06-01T13%3A36%3A00Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-25T13%3A36%3A00Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/c97ee8b1-b719-4386-b272-f8700bc9fb63/generated_00.png?se=2024-05-27T07%3A00%3A54Z&sig=qVr88rF1CteyQdDWexNqaL14VGdb7o2NsGswPc6YXLc%3D&ske=2024-05-29T12%3A38%3A41Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-22T12%3A38%3A41Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/259deac9-a667-4ebe-9aca-69937b537350/generated_00.png?se=2024-05-27T07%3A01%3A31Z&sig=OffBFqddnez5IL696OJQnvUNCgpfPyyk7gCLJY0tres%3D&ske=2024-06-01T13%3A36%3A00Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-25T13%3A36%3A00Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/7113893b-da37-42c1-9d8b-89ccbeb73cab/generated_00.png?se=2024-05-27T07%3A01%3A44Z&sig=wvETB9K1MkElBmqH%2FueghfCv9O8OET4d1Q30OJv49Yw%3D&ske=2024-06-01T13%3A36%3A00Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-25T13%3A36%3A00Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/d7785d17-d22f-4e04-9c42-cd05723ea28f/generated_00.png?se=2024-05-27T07%3A01%3A58Z&sig=41hPnWEYVwAS2PHkBk5OS5FIZj41m4rgUgAj2Ci4xz4%3D&ske=2024-05-29T12%3A38%3A41Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-22T12%3A38%3A41Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/d89aed10-5f85-4efd-9956-c85fadf2b923/generated_00.png?se=2024-05-27T07%3A02%3A33Z&sig=Xxql4cGcsJ0eOKI2Oh6RYML3%2BrB1%2FrzG3Dj4bUhieXk%3D&ske=2024-05-29T08%3A06%3A31Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-22T08%3A06%3A31Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/c684ddeb-a535-4ba5-9ded-16997247811b/generated_00.png?se=2024-05-27T07%3A02%3A43Z&sig=wVXKLmnTLohs70EuZnT%2FECbu22cEss6CJNUEGXOoRiM%3D&ske=2024-05-29T12%3A38%3A41Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-22T12%3A38%3A41Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02', 'https://dalleproduse.blob.core.windows.net/private/images/60bc9c77-167b-43f0-bc1b-32f60d38e07e/generated_00.png?se=2024-05-27T07%3A02%3A58Z&sig=Vr5K4uGCkSbn4nA69xVMdMuAbshyDEH74vISag6m6Mc%3D&ske=2024-06-01T13%3A36%3A00Z&skoid=09ba021e-c417-441c-b203-c81e5dcd7b7f&sks=b&skt=2024-05-25T13%3A36%3A00Z&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skv=2020-10-02&sp=r&spr=https&sr=b&sv=2020-10-02']
-    #make it so response_1 transfers each row to a list by the separator \n
     response_1_list = response_1.split('\n')
     mid_index = len(response_1_list)//2
     first_half = response_1_list[:mid_index]
     second_half = response_1_list[mid_index:]
-    print(first_half)
-    print(second_half)
-
+    paired_words = [(final_word_list[i], final_word_list[i + 1]) for i in range(0, len(final_word_list), 2)]
+    with open('paired_words.txt', 'w', encoding='utf-8') as f:
+        for item in paired_words:
+            f.write(item[0] + ' = ' + item[1] + '\n')
     return render(request, 'response.html', {
+        'paired_words': paired_words,
         'response_1': first_half,
         'response_1_2': second_half,
         'response_2': response_2,
